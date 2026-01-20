@@ -11,22 +11,22 @@ fn main() {
         println!("cargo:rustc-cfg=native");
     }
 
-    if target.starts_with("thumb") {
-        let suffix = if env::var_os("CARGO_FEATURE_LINKER_PLUGIN_LTO").is_some() {
-            "-lto"
-        } else {
-            ""
-        };
-
-        fs::copy(
-            format!("bin/{}{}.a", target, suffix),
-            out_dir.join(format!("lib{}.a", name)),
-        )
-        .unwrap();
-
-        println!("cargo:rustc-link-lib=static={}", name);
-        println!("cargo:rustc-link-search={}", out_dir.display());
-    }
+    //if target.starts_with("thumb") {
+    //    let suffix = if env::var_os("CARGO_FEATURE_LINKER_PLUGIN_LTO").is_some() {
+    //        "-lto"
+    //    } else {
+    //        ""
+    //    };
+    //
+    //    fs::copy(
+    //        format!("bin/{}{}.a", target, suffix),
+    //        out_dir.join(format!("lib{}.a", name)),
+    //    )
+    //    .unwrap();
+    //
+    //    println!("cargo:rustc-link-lib=static={}", name);
+    //    println!("cargo:rustc-link-search={}", out_dir.display());
+    //}
 
     println!("cargo:rustc-check-cfg=cfg(armv6m)");
     println!("cargo:rustc-check-cfg=cfg(armv7m)");

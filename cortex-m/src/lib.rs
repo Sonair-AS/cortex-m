@@ -73,7 +73,9 @@
 
 #![deny(missing_docs)]
 #![no_std]
+// Bit operations like `1 << 0` are used for clarity to match the ARM hardware reference manual.
 #![allow(clippy::identity_op)]
+// Safety documentation is provided at module/crate level; per-function docs are redundant for thin asm wrappers.
 #![allow(clippy::missing_safety_doc)]
 // Prevent clippy from complaining about empty match expression that are used for cfg gating.
 #![allow(clippy::match_single_binding)]

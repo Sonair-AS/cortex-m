@@ -90,8 +90,8 @@ mod test;
 // NOTE the `PhantomData` used in the peripherals proxy is to make them `Send` but *not* `Sync`
 
 /// Core peripherals
-#[allow(non_snake_case)]
-#[allow(clippy::manual_non_exhaustive)]
+#[allow(non_snake_case)] // Field names match the ARM architecture register block names (e.g. NVIC, SCB).
+#[allow(clippy::manual_non_exhaustive)] // Using `_priv: ()` for non-exhaustive to support older Rust versions without #[non_exhaustive].
 pub struct Peripherals {
     /// Cortex-M7 TCM and cache access control.
     #[cfg(feature = "cm7")]

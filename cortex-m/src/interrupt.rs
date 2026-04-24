@@ -26,8 +26,8 @@ pub unsafe trait InterruptNumber: Copy {
     fn number(self) -> u16;
 }
 
-/// Implement InterruptNumber for the old bare_metal::Nr trait.
-/// This implementation is for backwards compatibility only and will be removed in cortex-m 0.8.
+// Implement InterruptNumber for the old bare_metal::Nr trait.
+// This implementation is for backwards compatibility only and will be removed in cortex-m 0.8.
 //#[cfg(not(feature = "certified_subset"))]
 //unsafe impl<T: Nr + Copy> InterruptNumber for T {
 //    #[inline]

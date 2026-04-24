@@ -103,7 +103,7 @@ pub fn entry(args: TokenStream, input: TokenStream) -> TokenStream {
         #[doc(hidden)]
         #[export_name = "main"]
         pub unsafe extern "C" fn #tramp_ident() {
-            #[allow(static_mut_refs)]
+            #[allow(static_mut_refs)] // Generated trampoline references static muts for resource args; entry point runs once.
             #ident(
                 #(#resource_args),*
             )
@@ -192,6 +192,8 @@ impl Parse for HardFaultArgs {
 }
 
 #[proc_macro_attribute]
+#[allow(clippy::too_many_lines)] // Proc-macro attribute handler; splitting would obscure the sequential validation logic.
+#[allow(clippy::cognitive_complexity)] // Inherent complexity from exhaustive exception-name matching and validation.
 pub fn exception(args: TokenStream, input: TokenStream) -> TokenStream {
     let mut f = parse_macro_input!(input as ItemFn);
 
@@ -501,7 +503,7 @@ pub fn exception(args: TokenStream, input: TokenStream) -> TokenStream {
                 #[doc(hidden)]
                 #[export_name = #ident_s]
                 pub unsafe extern "C" fn #tramp_ident() {
-                    #[allow(static_mut_refs)]
+                    #[allow(static_mut_refs)] // Generated exception trampoline references static muts for resource args.
                     #ident(
                         #(#resource_args),*
                     )
@@ -616,7 +618,7 @@ pub fn interrupt(args: TokenStream, input: TokenStream) -> TokenStream {
         #[doc(hidden)]
         #[export_name = #ident_s]
         pub unsafe extern "C" fn #tramp_ident() {
-            #[allow(static_mut_refs)]
+            #[allow(static_mut_refs)] // Generated interrupt trampoline references static muts for resource args.
             #ident(
                 #(#resource_args),*
             )

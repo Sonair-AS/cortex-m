@@ -22,7 +22,7 @@
 
 /// This values are taken from section 5.5.2 of
 /// ADS Debug Target Guide (DUI0058).
-// TODO document
+// Exception variant names are self-descriptive; taken from ARM ADS Debug Target Guide (DUI0058) section 5.5.2.
 #[allow(missing_docs)]
 pub enum Exception {
     // Hardware reason codes

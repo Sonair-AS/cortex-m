@@ -4,7 +4,7 @@
 /// the inline assembly implementation directly, or through the FFI shim (see `asm/lib.rs`).
 macro_rules! call_asm {
     ( $func:ident ( $($args:ident: $tys:ty),* ) $(-> $ret:ty)? ) => {{
-        #[allow(unused_unsafe)]
+        #[allow(unused_unsafe)] // The inline-asm path may not require unsafe, but the FFI path does; both share this block.
         unsafe {
             match () {
                 #[cfg(feature = "inline-asm")]

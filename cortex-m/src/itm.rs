@@ -30,7 +30,7 @@ unsafe fn write_aligned_impl(port: &mut Stim, buffer: &[u8]) {
     }
 
     let split = len & !0b11;
-    #[allow(clippy::cast_ptr_alignment)]
+    #[allow(clippy::cast_ptr_alignment)] // Caller guarantees `buffer` is 4-byte aligned.
     write_words(
         port,
         slice::from_raw_parts(buffer.as_ptr() as *const u32, split >> 2),
@@ -44,7 +44,7 @@ unsafe fn write_aligned_impl(port: &mut Stim, buffer: &[u8]) {
     if left > 1 {
         while !port.is_fifo_ready() {}
 
-        #[allow(clippy::cast_ptr_alignment)]
+        #[allow(clippy::cast_ptr_alignment)] // `ptr` is 2-byte aligned here: started 4-byte aligned, subtracted aligned amounts.
         port.write_u16(ptr::read(ptr as *const u16));
 
         ptr = ptr.offset(2);
@@ -78,7 +78,7 @@ impl<'p> fmt::Write for Port<'p> {
 pub struct Aligned<T: ?Sized>(pub T);
 
 /// Writes `buffer` to an ITM port.
-#[allow(clippy::missing_inline_in_public_items)]
+#[allow(clippy::missing_inline_in_public_items)] // Contains non-trivial alignment and loop logic; inlining would bloat callers.
 pub fn write_all(port: &mut Stim, buffer: &[u8]) {
     unsafe {
         let mut len = buffer.len();
@@ -104,8 +104,7 @@ pub fn write_all(port: &mut Stim, buffer: &[u8]) {
                 // at least 2 bytes
                 while !port.is_fifo_ready() {}
 
-                // We checked the alignment above, so this is safe
-                #[allow(clippy::cast_ptr_alignment)]
+                #[allow(clippy::cast_ptr_alignment)] // `ptr` is 2-byte aligned: verified by the `ptr % 4 == 2` check above.
                 port.write_u16(ptr::read(ptr as *const u16));
 
                 // 0x04
@@ -143,7 +142,7 @@ pub fn write_all(port: &mut Stim, buffer: &[u8]) {
 /// // Or equivalently
 /// itm::write_aligned(port, &Aligned(*b"Hello, world!\n"));
 /// ```
-#[allow(clippy::missing_inline_in_public_items)]
+#[allow(clippy::missing_inline_in_public_items)] // Delegates to write_aligned_impl which has non-trivial logic.
 pub fn write_aligned(port: &mut Stim, buffer: &Aligned<[u8]>) {
     unsafe { write_aligned_impl(port, &buffer.0) }
 }

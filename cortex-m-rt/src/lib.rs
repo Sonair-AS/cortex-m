@@ -937,7 +937,7 @@ pub static __ONCE__: () = ();
 /// Registers stacked (pushed onto the stack) during an exception.
 #[derive(Clone, Copy)]
 #[repr(C)]
-#[allow(dead_code)]
+#[allow(dead_code)] // Fields are populated by hardware during exception entry, not by Rust code.
 pub struct ExceptionFrame {
     r0: u32,
     r1: u32,
@@ -1134,14 +1134,14 @@ pub static __RESET_VECTOR: unsafe extern "C" fn() -> ! = Reset;
 #[cfg_attr(cortex_m, link_section = ".HardFault.default")]
 #[no_mangle]
 pub unsafe extern "C" fn HardFault_() -> ! {
-    #[allow(clippy::empty_loop)]
+    #[allow(clippy::empty_loop)] // Intentional infinite loop: default HardFault handler halts the processor.
     loop {}
 }
 
 #[doc(hidden)]
 #[no_mangle]
 pub unsafe extern "C" fn DefaultHandler_() -> ! {
-    #[allow(clippy::empty_loop)]
+    #[allow(clippy::empty_loop)] // Intentional infinite loop: default handler halts the processor on unhandled exceptions.
     loop {}
 }
 
